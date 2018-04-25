@@ -1,6 +1,7 @@
-// ==========================
-// Author Chris Mahan
-// ==========================
+/**
+ * Author   Chris Mahan
+ * Email    cjmahan19@gmail.com
+ */
 
 // ==========================
 // Accquire packages
