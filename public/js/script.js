@@ -1,7 +1,8 @@
+var sourceBucket;   // Global variable to keep track of what the source bucket is
 var socket = io();
 
 socket.on("listBuckets", function (bucketList) {
-    var buckets = ["bucket-list", "source-bucket", "dest-bucket"];
+    var buckets = ["bucket-list", "dest-bucket"];
     buckets.forEach(function(bucket) {
         var dropDown = document.getElementById(bucket);
         dropDown.innerHTML = "";
@@ -46,6 +47,7 @@ socket.on("copySuccess", function () {
 function getObjects() {
     var selected = document.getElementById("bucket-list");          // Get the currently selected bucket's name
     var bucket = selected.options[selected.selectedIndex].value;    // Get the currently selected bucket's name
+    sourceBucket = bucket;
     socket.emit('listObjects', bucket);
 }
 
@@ -58,14 +60,13 @@ function copyItems() {
             selectedItems.push(checkbox.id);
         }
     });
-    var selected = document.getElementById("source-bucket");          // Get the source bucket's name
-    var bucket = selected.options[selected.selectedIndex].value;    // Get the source selected bucket's name
-    query.source = bucket;
 
     selected = document.getElementById("dest-bucket");              // Get the source bucket's name
     bucket = selected.options[selected.selectedIndex].value;        // Get the source selected bucket's name
     query.dest = bucket;
     
+    query.source = sourceBucket;                                    // Source bucket is a global variable
+
     query.files = selectedItems;
     socket.emit("copyFile", query);
 }
