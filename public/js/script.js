@@ -58,7 +58,6 @@ function copyItems() {
             selectedItems.push(checkbox.id);
         }
     });
-    // change this the source bucket is choosen when the user picks objects from a bucket with checkboxes 
     var selected = document.getElementById("source-bucket");          // Get the source bucket's name
     var bucket = selected.options[selected.selectedIndex].value;    // Get the source selected bucket's name
     query.source = bucket;

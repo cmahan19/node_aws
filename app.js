@@ -1,8 +1,3 @@
-/** 
- * Author   Chris Mahan
- * 
- * 
-*/
 // ==========================
 // Accquire packages
 // ==========================
@@ -15,19 +10,17 @@ var AWS = require('aws-sdk');
 // ==========================
 // Configurations
 // ==========================
-app.use(express.static(__dirname + "/public"));             // Use the public folder to connect with client
-AWS.config.update({ region: 'us-west-2' });                 //set the AWS region
-s3 = new AWS.S3({ apiVersion: '2006-03-01' });              // Create S3 service object
-var cw = new AWS.CloudWatch({apiVersion: '2010-08-01'});    // Create CloudWatch service object
+app.use(express.static(__dirname + "/public"));
+AWS.config.update({ region: 'us-west-2' });         //set the AWS region
+s3 = new AWS.S3({ apiVersion: '2006-03-01' });      // Create S3 service object
 
 // ==========================
 // Socket connection
 // ==========================
-io.on('connection', function (socket) {                     //Connection with the client.
+io.on('connection', function (socket) {
     console.log("user connected");
-
+    
     // Request from the client to list the buckets' names
-    //Desc: listbuckets() returns a list of buckets from AWS
     s3.listBuckets(function(err, data) {
         if (err) {
             console.log(err, err.stack);
@@ -38,12 +31,11 @@ io.on('connection', function (socket) {                     //Connection with th
     });
     
     // Request from the client to list the object in selected the bucket
-    // Desc: listobjects() returns a list of objects contained in specified s3 bucket from AWS
     socket.on("listObjects", (bucketName) => {
         console.log(`Requesting bucket: ${bucketName}`);
         var params = {
             Bucket: bucketName,
-             MaxKeys: 25      // Requesting number of files files at a time. later this will be set to 100
+            // MaxKeys: 2      // Requesting 2 files at a time. later this will be set to 100
         };
         s3.listObjectsV2(params, function (err, data) {
             if (err) {
@@ -55,11 +47,9 @@ io.on('connection', function (socket) {                     //Connection with th
         });
     });
 
-    // Request from the client to copy objects from one bucket to anouther
-    // Desc: copyfile() Copy an object from one s3 bucket to anouther s3 bucket
     socket.on("copyFile", function (query) {
-        var numSuccess = 1;                            // Number of successful copies done
-        query.files.forEach((file) => {                // loop through and copy each file the user checked 
+        var numSuccess = 1;         // Number of successful copies done
+        query.files.forEach((file) => {
             var params = {
                 Bucket: query.dest,
                 CopySource: "/" + query.source + "/" + file,
@@ -80,6 +70,8 @@ io.on('connection', function (socket) {                     //Connection with th
     });
 
 });
+
+
 
 // ==========================
 // Server Info
