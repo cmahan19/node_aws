@@ -1,76 +1,76 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="UTF-8">
+    <head>
+        <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-    <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+        <link rel="stylesheet" href="css/style.css">
 
-    <title>EROS Data Processing</title>
-</head>
+        <title>EROS Data Processing</title>
+    </head>
 
-<body>
-    <header>
-        <div class="headline">
-            <div class="inner">
-                <h1>EROS AWS Control Panel</h1>
-                <p>Satalite Images</p>
+    <body>
+        <header>
+            <div class="headline">
+                <div class="inner">
+                    <h1>EROS AWS Control Panel</h1>
+                    <p>Satalite Images</p>
+                </div>
             </div>
-        </div>
-    </header>
+        </header>
 
-    <section>
-        <h2>AWS Management counsel</h2>
-        <p>
-            This app allows users to control aws resources. Dolor similique mollitia aspernatur facere amet aliquam dicta error
-            accusantium, enim voluptatibus perspiciatis libero rem quas voluptate suscipit saepe, delectus vitae quos?
-        </p>
+        <section>
+            <h2>AWS Management counsel</h2>
+            <p>
+                This app allows users to control aws resources. Dolor similique mollitia aspernatur facere amet aliquam dicta error accusantium,
+                enim voluptatibus perspiciatis libero rem quas voluptate suscipit saepe, delectus vitae quos?
+            </p>
 
-        <h2>Here are the available aws resources</h2>
+            <h2>Here are the available aws resources</h2>
 
-        <h4>Choose a s3 bucket name, then click the button to List Bucket Objects</h4>
-        <!-- Select the bucket to list the objects from -->
-        <div id="select-bucket-div">
-            <h4>List the Objects in a Bucket</h4>
-            <select name="bucket-list" id="bucket-list"></select>
-            <button id="get-objects" onclick="getObjects()">List Objects</button>
-        </div>
+            <h4>Choose a s3 bucket name, then click the button to List Bucket Objects</h4>
+            <!-- Select the bucket to list the objects from -->
+            <div id="select-bucket-div">
+                <h4>List the Objects in a Bucket</h4>
+                <select name="bucket-list" id="bucket-list"></select>
+                <button id="get-objects" onclick="getObjects()">List Objects</button>
+            </div>
 
-        <!-- List the objects from the selected bucket to the table -->
-        <div id="bucket-list-table-div">
-            <!-- <div id="search-box-div">
+            <!-- List the objects from the selected bucket to the table -->
+            <div id="bucket-list-table-div">
+                <!-- <div id="search-box-div">
                     <input type="text" placeholder="Enter the keyword...">
                     <button id="search-btn">Search</button>
                 </div> -->
-            <table id="list-table">
-                <thead>
-                    <tr>
-                        <th>
-                            <input id="checkbox-all" type="checkbox">
-                        </th>
-                        <th>File Name</th>
-                        <th>Creation Date</th>
-                    </tr>
-                </thead>
-                <tbody id="list-tbody"></tbody>
-                <!-- Insert items via JavaScript -->
-            </table>
-        </div>
+                <table id="list-table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input id="checkbox-all" type="checkbox">
+                            </th>
+                            <th>File Name</th>
+                            <th>Creation Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list-tbody"></tbody>
+                    <!-- Insert items via JavaScript -->
+                </table>
+            </div>
 
-        <h4>Choose a s3 bucket name as a destination bucket to copy files into, then click the button to copy files</h4>
-        <div id="copy-objects-div">
-            <label for="dest-bucket">Destination Bucket</label>
-            <select name="dest-bucket" id="dest-bucket"></select>
-            <br>
-            <button id="copyBtn" onclick="copyItems()">Copy Selected Items</button>
-        </div>
+            <h4>Choose a s3 bucket name as a destination bucket to copy files into, then click the button to copy files</h4>
+            <div id="copy-objects-div">
+                <label for="dest-bucket">Destination Bucket</label>
+                <select name="dest-bucket" id="dest-bucket"></select>
+                <br>
+                <button id="copyBtn" onclick="copyItems()">Copy Selected Items</button>
+            </div>
 
 
-    </section>
+        </section>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="js/script.js"></script>
-</body>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
+    </body>
 
 </html>

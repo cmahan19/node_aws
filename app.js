@@ -2,7 +2,6 @@
  * Author   Chris Mahan
  * Email    cjmahan19@gmail.com
  * 
- * 
  */
 
 // ==========================
@@ -75,7 +74,6 @@ io.on('connection', function (socket) {
             });
         });
     });
-
 });
 
 // ==========================
