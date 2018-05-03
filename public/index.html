@@ -7,6 +7,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
         <link rel="stylesheet" href="css/style.css">
 
+        <script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+
         <title>EROS Data Processing</title>
     </head>
 
@@ -21,7 +23,7 @@
         </header>
 
         <section>
-            <h2>AWS Management counsel</h2>
+            <h2>AWS Management Console</h2>
             <p>
                 This app allows users to control aws resources. Dolor similique mollitia aspernatur facere amet aliquam dicta error accusantium,
                 enim voluptatibus perspiciatis libero rem quas voluptate suscipit saepe, delectus vitae quos?
@@ -47,7 +49,7 @@
                     <thead>
                         <tr>
                             <th>
-                                <input id="checkbox-all" type="checkbox">
+                                <input id="checkbox-all" type="checkbox" disabled>
                             </th>
                             <th>File Name</th>
                             <th>Creation Date</th>
@@ -66,11 +68,40 @@
                 <button id="copyBtn" onclick="copyItems()">Copy Selected Items</button>
             </div>
 
-
+            <div id="upload-objects-div">
+                <input type="file" id="input">
+                <button id="file-upload-btn" onclick="uploadFile()">Upload</button>
+            </div>
         </section>
 
+        <section>
+                <form action="http://cjmahan19.s3.amazonaws.com/" method="post" enctype="multipart/form-data">
+                    Key to upload: 
+                    <input type="input"  name="key" value="user/cjmahan19/" /><br />
+                    <input type="hidden" name="acl" value="public-read" />
+                    <input type="hidden" name="success_action_redirect" value="http://cjmahan19.s3.amazonaws.com/successful_upload.html" />
+                    Content-Type: 
+                    <input type="input"  name="Content-Type" value="image/jpeg" /><br />
+                    <input type="hidden" name="x-amz-meta-uuid" value="14365123651274" /> 
+                    <input type="hidden" name="x-amz-server-side-encryption" value="AES256" /> 
+                    <input type="text"   name="X-Amz-Credential" value="AKIAIWN6ZWARAL3G56IA/20181229/us-east-1/s3/augiebucket" />
+                    <input type="text"   name="X-Amz-Algorithm" value="AWS4-HMAC-SHA256" />
+                    <input type="text"   name="X-Amz-Date" value="20181229T000000Z" />
+                
+                    Tags for File: 
+                    <input type="input"  name="x-amz-meta-tag" value="" /><br />
+                    <input type="hidden" name="Policy" value='<Base64-encoded policy string>' />
+                    <input type="hidden" name="X-Amz-Signature" value="<signature-value>" />
+                        <!-- <input type="hidden" name="Region" value="us-west-2"> -->
+                    File: 
+                    <input type="file"   name="file" /> <br />
+                    <!-- The elements after this will be ignored -->
+                    <input type="submit" name="submit" value="Upload to Amazon S3" />
+                  </form>
+        </section>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="js/script.js"></script>
     </body>
-
 </html>

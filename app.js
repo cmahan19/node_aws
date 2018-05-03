@@ -7,27 +7,60 @@
 // ==========================
 // Accquire packages
 // ==========================
-var express = require("express");
-var app = express();
-var http = require("http").Server(app);
-var io = require('socket.io')(http);
-var AWS = require('aws-sdk');
+const express = require("express");
+const app = express();
+const http = require("http").Server(app);
+const io = require('socket.io')(http);
+const AWS = require('aws-sdk');
 
 // ==========================
-// Configurations
+// Express Configurations
 // ==========================
 app.use(express.static(__dirname + "/public"));
-AWS.config.update({ region: 'us-west-2' });         //set the AWS region
-s3 = new AWS.S3({ apiVersion: '2006-03-01' });      // Create S3 service object
 
 // ==========================
-// Socket connection
+// AWS Configurations
+// ==========================
+AWS.config.update({ region: 'us-west-2' });                             // Set the AWS region
+var s3 = new AWS.S3({ apiVersion: '2006-03-01' });                      // Create S3 service object
+var cloudwatch = new AWS.CloudWatch({ apiVersion: '2010-08-01' });      // Create a cloudwatch instance
+
+// ==========================
+// Global Scope Variables
+// ==========================
+const AWS_Stats = {                                                     // An object to hold the AWS stats
+    numFilesInBucket: -1,
+    numFilesOutBucket: -1,
+    inBucketSize: -1,
+    outBucketSize: -1
+};
+
+// ==========================
+// Fetch AWS Stats
+// ==========================
+const UPDATE_INTERVAL = 1000 * 3600 * 6;                                // Update every 6 hours
+function fetchStats() {
+    var params = {
+        DashboardName: "BucketInfo"
+    };
+    cloudwatch.getDashboard(params, function (err, data) {
+        if (err) console.log(err, err.stack);
+        else {
+            console.log("Stat fetch to be developed...");
+        }
+    });
+}
+// fetchStats();
+// setInterval(fetchStats, UPDATE_INTERVAL);
+
+// ==========================
+// Socket Connection
 // ==========================
 io.on('connection', function (socket) {
     console.log("user connected");
-    
+
     // Request from the client to list the buckets' names
-    s3.listBuckets(function(err, data) {
+    s3.listBuckets(function (err, data) {
         if (err) {
             console.log(err, err.stack);
         } else {
@@ -35,7 +68,7 @@ io.on('connection', function (socket) {
             socket.emit("listBuckets", bucketsList);
         }
     });
-    
+
     // Request from the client to list the object in selected the bucket
     socket.on("listObjects", (bucketName) => {
         console.log(`Requesting bucket: ${bucketName}`);
@@ -65,7 +98,7 @@ io.on('connection', function (socket) {
                 if (err) {
                     console.log(err, err.stack);
                 } else {
-                    if(numSuccess === query.files.length) {
+                    if (numSuccess === query.files.length) {
                         socket.emit("copySuccess");
                     } else {
                         numSuccess++;

@@ -3,7 +3,7 @@ var socket = io();
 
 socket.on("listBuckets", function (bucketList) {
     var buckets = ["bucket-list", "dest-bucket"];
-    buckets.forEach(function(bucket) {
+    buckets.forEach(function (bucket) {
         var dropDown = document.getElementById(bucket);
         dropDown.innerHTML = "";
         bucketList.forEach(function (item) {
@@ -49,14 +49,16 @@ function getObjects() {
     var bucket = selected.options[selected.selectedIndex].value;    // Get the currently selected bucket's name
     sourceBucket = bucket;
     socket.emit('listObjects', bucket);
+    var checkAllBox = document.getElementById("checkbox-all");      // Find the DOM element check-all-box
+    checkAllBox.removeAttribute("disabled");                        // Re-enable the button after listing the objects
 }
 
 function copyItems() {
     var query = {};                                                 // All the info about the files that are going to be copied
     var selectedItems = [];                                         // Contains the ETags of the files that are selected
     var checkboxs = document.querySelectorAll("tbody td input");    // Select all the checkboxs in cell #2
-    checkboxs.forEach(function(checkbox) {
-        if(checkbox.checked) {
+    checkboxs.forEach(function (checkbox) {
+        if (checkbox.checked) {
             selectedItems.push(checkbox.id);
         }
     });
@@ -64,7 +66,7 @@ function copyItems() {
     selected = document.getElementById("dest-bucket");              // Get the source bucket's name
     bucket = selected.options[selected.selectedIndex].value;        // Get the source selected bucket's name
     query.dest = bucket;
-    
+
     query.source = sourceBucket;                                    // Source bucket is a global variable
 
     query.files = selectedItems;
@@ -78,3 +80,23 @@ function copyFile() {
     info.filename = document.getElementById("filename").value;
     socket.emit("copyFile", info);
 }
+
+function uploadFile() {
+    var selectedFile = document.getElementById('file-upload-btn').files[0];
+    console.log(selectedFile);
+}
+
+(function checkAll() {                                             // Select all the files from the list when check-all button is clicked
+    var checkAllBox = document.getElementById("checkbox-all");
+    checkAllBox.addEventListener("click", function(event) {
+        var checkboxs = document.querySelectorAll("tbody td input");// Select all the checkboxs in cell #2
+        checkboxs.forEach(function (checkbox) {
+            if(checkAllBox.checked == true) {
+                checkbox.checked = true;
+            } else {
+                checkbox.checked = false;
+            }
+
+        });
+    });
+}());   // Self-invoking
