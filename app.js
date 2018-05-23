@@ -10,8 +10,9 @@
 const express = require("express");
 const app = express();
 const http = require("http").Server(app);
-const io = require('socket.io')(http);
-const AWS = require('aws-sdk');
+const io = require("socket.io")(http);
+const AWS = require("aws-sdk");
+const fs = require("fs-extra");
 
 // ==========================
 // Express Configurations
@@ -86,7 +87,7 @@ io.on('connection', function (socket) {
         });
     });
 
-    socket.on("copyFile", function (query) {
+    socket.on("copyFile", (query) => {
         var numSuccess = 1;         // Number of successful copies done
         query.files.forEach((file) => {
             var params = {
@@ -94,7 +95,7 @@ io.on('connection', function (socket) {
                 CopySource: "/" + query.source + "/" + file,
                 Key: file
             };
-            s3.copyObject(params, function (err, data) {
+            s3.copyObject(params, (err, data) => {
                 if (err) {
                     console.log(err, err.stack);
                 } else {
@@ -107,6 +108,34 @@ io.on('connection', function (socket) {
             });
         });
     });
+
+    socket.on("downloadFiles", (query) => {
+        fs.removeSync("./public/downloads");
+        fs.mkdirSync("./public/downloads");
+
+        query.files.forEach((file) => {
+            var params = {
+                Bucket: "/" + query.source,
+                Key: file
+            };
+            var destination = "./public/downloads/" + file;
+            var file = fs.createWriteStream(destination);
+            s3.getObject(params).createReadStream().pipe(file);
+        });
+
+        function zipFiles() {
+            // Compress and Zip the downloaded files
+            const { exec } = require('child_process');
+            exec("tar cf ./public/downloads/Files.tar ./public/downloads/*", () => {
+                socket.emit("downloadReady");
+            });
+        }
+
+        // TEMP SOLUTION!!!
+        // Flush the data in the memory into the disk 
+        setTimeout(zipFiles, 2000);
+    });
+
 });
 
 // ==========================

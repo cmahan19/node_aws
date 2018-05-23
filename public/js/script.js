@@ -40,8 +40,15 @@ socket.on("bucketList", function (theList) {
     });
 });
 
-socket.on("copySuccess", function () {
+socket.on("copySuccess", function() {
     alert("Copy success!");
+});
+
+socket.on("downloadReady", function() {
+    var tempLink = document.createElement("a");
+    tempLink.download = "Files.tar";
+    tempLink.href = "/downloads/Files.tar";
+    tempLink.click();
 });
 
 function getObjects() {
@@ -100,3 +107,19 @@ function uploadFile() {
         });
     });
 }());   // Self-invoking
+
+function downloadFiles() {
+    var query = {};                                                 // All the info about the files that are going to be downloaded
+    var selectedItems = [];                                         // Contains the ETags of the files that are selected
+    var checkboxs = document.querySelectorAll("tbody td input");    // Select all the checkboxs in cell #2
+    checkboxs.forEach(function (checkbox) {
+        if (checkbox.checked) {
+            selectedItems.push(checkbox.id);
+        }
+    });
+
+    query.source = sourceBucket;                                    // Source bucket is a global variable
+    query.files = selectedItems;
+
+    socket.emit("downloadFiles", query);
+}
